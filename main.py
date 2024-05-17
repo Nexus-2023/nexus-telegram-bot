@@ -145,6 +145,15 @@ async def list_groups(event):
         await event.reply(f"Groups in list '{list_name}':\n{group_list}")
     else:
         await event.reply(f"No groups found in the list '{list_name}'.")
+@client.on(events.NewMessage(pattern='/lists', from_users=admin_id))
+async def list_lists(event):
+    lists = db.get_all_list_names()
+    if lists:
+        lists_text = '\n'.join(lists)
+        await event.reply(f"All lists:\n{lists_text}")
+    else:
+        await event.reply("No lists found.")
+
 
 def main():
     client.run_until_disconnected()
