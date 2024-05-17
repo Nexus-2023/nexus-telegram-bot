@@ -133,6 +133,7 @@ async def help_command(event):
         "/removegroup [list_name] [group_name] - Remove a group from a specific list.\n"
         "/listgroups [list_name] - List all group names in a specific list.\n"
         "/help - Show this help message.\n"
+        "/lists - List all list names. \n"
     )
     await event.reply(help_text)
 
