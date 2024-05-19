@@ -58,6 +58,8 @@ This is a Telegram bot designed for managing groups, broadcasting messages, and 
     __pycache__/
     *.py[cod]
     *$py.class
+    .db
+    .session
 
 
 
