@@ -2,12 +2,7 @@ import re
 import logging
 from telethon import TelegramClient, events, Button
 from database import Database
-from dotenv import load_dotenv
-import os
-import asyncio
-
-# Load environment variables from .config file
-load_dotenv('.config')
+# import asyncio
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -167,16 +162,16 @@ async def show_lists(event):
         buttons = [[Button.inline(name, f"show_groups:{name}") for name in list_names]]
         await event.reply("Select a list to see its groups:", buttons=buttons)
 
-async def check_server():
-    while True:
-        await asyncio.sleep(60)  # Check every minute
-        try:
-            # Simulate a server check, replace with actual logic
-            # If server check fails, it will raise an exception
-            pass
-        except Exception as e:
-            await client.send_message(admin_id, "Server is down")
-            logger.error(f"Server is down: {e}")
+# async def check_server():
+#     while True:
+#         await asyncio.sleep(60)  # Check every minute
+#         try:
+#             # Simulate a server check, replace with actual logic
+#             # If server check fails, it will raise an exception
+#             pass
+#         except Exception as e:
+#             await client.send_message(admin_id, "Server is down")
+#             logger.error(f"Server is down: {e}")
 
 def main():
     client.loop.create_task(check_server())
