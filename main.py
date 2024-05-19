@@ -2,7 +2,12 @@ import re
 import logging
 from telethon import TelegramClient, events, Button
 from database import Database
+from dotenv import load_dotenv
+import os
+import asyncio
 
+# Load environment variables from .config file
+load_dotenv('.config')
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -12,6 +17,10 @@ api_id = ""
 api_hash = ""
 bot_token = ""
 admin_id = 
+
+# Convert numeric environment variables to integers
+api_id = int(api_id)
+admin_id = int(admin_id)
 
 # Initialize client and database
 client = TelegramClient('bot', api_id, api_hash).start(bot_token=bot_token)
@@ -78,12 +87,14 @@ async def handle_callback(event):
             await event.reply(f"Failed to add group '{group_name}' to the list '{list_name}'. It might already be added.")
         db.clear_session(admin_id)
 
-    elif data.startswith("remove_from_list:"):
-        list_name, group_name = data.split(":")[1], data.split(":")[2]
-        if db.remove_group_from_list(group_name, list_name):
-            await event.reply(f"Group '{group_name}' removed from list '{list_name}' successfully!")
+    elif data.startswith("show_groups:"):
+        list_name = data.split(":")[1]
+        groups = db.get_group_names(list_name)
+        if groups:
+            group_list = '\n'.join(groups)
+            await event.reply(f"Groups in list '{list_name}':\n{group_list}")
         else:
-            await event.reply(f"Failed to remove group '{group_name}' from the list '{list_name}'. It might not exist.")
+            await event.reply(f"No groups found in the list '{list_name}'.")
 
 @client.on(events.NewMessage(pattern='/broadcast (.*)', from_users=admin_id))
 async def broadcast(event):
@@ -132,8 +143,8 @@ async def help_command(event):
         "/deletelist [list_name] - Delete a specific list.\n"
         "/removegroup [list_name] [group_name] - Remove a group from a specific list.\n"
         "/listgroups [list_name] - List all group names in a specific list.\n"
+        "/lists - Show all lists with inline buttons to see their groups.\n"
         "/help - Show this help message.\n"
-        "/lists - List all list names. \n"
     )
     await event.reply(help_text)
 
@@ -146,17 +157,29 @@ async def list_groups(event):
         await event.reply(f"Groups in list '{list_name}':\n{group_list}")
     else:
         await event.reply(f"No groups found in the list '{list_name}'.")
-@client.on(events.NewMessage(pattern='/lists', from_users=admin_id))
-async def list_lists(event):
-    lists = db.get_all_list_names()
-    if lists:
-        lists_text = '\n'.join(lists)
-        await event.reply(f"All lists:\n{lists_text}")
-    else:
-        await event.reply("No lists found.")
 
+@client.on(events.NewMessage(pattern='/lists', from_users=admin_id))
+async def show_lists(event):
+    list_names = db.get_all_list_names()
+    if not list_names:
+        await event.reply("No lists found.")
+    else:
+        buttons = [[Button.inline(name, f"show_groups:{name}") for name in list_names]]
+        await event.reply("Select a list to see its groups:", buttons=buttons)
+
+async def check_server():
+    while True:
+        await asyncio.sleep(60)  # Check every minute
+        try:
+            # Simulate a server check, replace with actual logic
+            # If server check fails, it will raise an exception
+            pass
+        except Exception as e:
+            await client.send_message(admin_id, "Server is down")
+            logger.error(f"Server is down: {e}")
 
 def main():
+    client.loop.create_task(check_server())
     client.run_until_disconnected()
 
 if __name__ == '__main__':
