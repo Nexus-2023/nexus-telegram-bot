@@ -56,10 +56,7 @@ This is a Telegram bot designed for managing groups, broadcasting messages, and 
 4. Create a `.gitignore` file in the root directory to exclude unnecessary files:
 
     ```gitignore
-    # Byte-compiled / optimized / DLL files
     __pycache__/
-    *.py[cod]
-    *$py.class
     .db
     .session
 
