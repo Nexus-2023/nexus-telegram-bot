@@ -28,6 +28,7 @@ This is a Telegram bot designed for managing groups, broadcasting messages, and 
 
 - Python 3.6+
 - [Telethon](https://github.com/LonamiWebs/Telethon)
+- SQL3lite
 
 ### Installation
 
@@ -49,6 +50,7 @@ This is a Telegram bot designed for managing groups, broadcasting messages, and 
 
     ```bash
     pip install telethon
+    pip install sql3lite
     ```
 
 4. Create a `.gitignore` file in the root directory to exclude unnecessary files:
