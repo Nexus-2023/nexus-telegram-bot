@@ -1,8 +1,13 @@
 import sqlite3
 import json
+import os
+from dotenv import load_dotenv
 
 class Database:
     def __init__(self, db_file):
+        load_dotenv('.config')  # Load environment variables from .config file
+        self.db_username = os.getenv("DB_USERNAME")
+        self.db_password = os.getenv("DB_PASSWORD")
         self.conn = sqlite3.connect(db_file)
         self.cursor = self.conn.cursor()
         self.create_tables()
@@ -24,6 +29,11 @@ class Database:
             )
         ''')
         self.conn.commit()
+
+    def authenticate(self, username, password):
+        return username == self.db_username and password == self.db_password
+    
+
 
     def add_group(self, group_id, group_name, list_name):
         try:
