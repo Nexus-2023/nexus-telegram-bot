@@ -39,21 +39,14 @@ This is a Telegram bot designed for managing groups, broadcasting messages, and 
     cd telegram-group-management-bot
     ```
 
-2. Create a virtual environment and activate it:
-
-    ```bash
-    python3 -m venv venv
-    source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
-    ```
-
-3. Install the dependencies:
+2. Install the dependencies:
 
     ```bash
     pip install telethon
     pip install sqlite3
     ```
 
-4. Create a `.gitignore` file in the root directory to exclude unnecessary files:
+3. Create a `.gitignore` file in the root directory to exclude unnecessary files:
 
     ```gitignore
     __pycache__/
